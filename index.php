@@ -77,7 +77,7 @@
         </script>
         <style>
             #container{
-                width: 600px;
+                width: 800px;
                 margin: 50px auto 0 auto;
             }
         </style>

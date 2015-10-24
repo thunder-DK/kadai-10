@@ -24,14 +24,17 @@
     $uri = "http://api.gnavi.co.jp/RestSearchAPI/20150630/";
     $acckey = $key_id;
     $format = "json";
-    $s_show = 200;
+    $s_show = 500;
     $s_range = 3;
+    $_input_mode = 2;
+    $s_mode = 2;
 
     //$url = "http://api.gnavi.co.jp/RestSearchAPI/20150630/?keyid=" .$acckey. "&latitude=" .$s_lat. "&longitude=" .$s_lon. "& range=3&hit_per_page=" .&s_show. "&format=json";
     //var_dump($url)
 
     // APIに渡す引数を指定
-    $url = sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s", $uri, "?format=", $format, "&keyid=", $acckey, "&latitude=", $s_lat,"&longitude=",$s_lon,"&range=",$s_range,"&hit_per_page=",$s_show);    
+    $url = sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", $uri, "?format=", $format, "&keyid=", $acckey, "&latitude=", $s_lat,"&longitude=",$s_lon,"&range=",$s_range,"&hit_per_page=",$s_show,"&input_coordinates_mode=",$_input_mode,"&coordinates_mode=",$s_mode);
+    //$url = sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", $uri, "?format=", $format, "&keyid=", $acckey, "&latitude=", $s_lat,"&longitude=",$s_lon,"&range=",$s_range,"&input_coordinates_mode=",$_input_mode,"&coordinates_mode=",$s_mode);
     //var_dump($url);    
 
     // APIからデータを取得
@@ -45,22 +48,30 @@
     $s_lat[] = null;
     $s_lon[] = null;
     $s_urllist[] = null;
+    //$s_count = $d_data->total_hit_count;
+
+    $hit_count = $d_data->total_hit_count;
+    //var_dump($shop_count);
+
+    if($hit_count < $s_show){
+        $s_count = $hit_count;
+    }
+    else{
+        $s_count = $s_show;
+    }
 
     // 選択した駅周辺のお店の名前、緯度経度、URL情報を配列にて管理
-    for($i=0; $i < $s_show; $i++){
+    for($i=0; $i < $s_count; $i++){
         $s_name[$i]=$d_data->rest[$i]->name;
         $s_lat[$i]=$d_data->rest[$i]->latitude;
         $s_lon[$i]=$d_data->rest[$i]->longitude;
         $s_urllist[$i]=$d_data->rest[$i]->url;
-        
         //var_dump($s_name[$i]);
         //var_dump($s_lat[$i]);
         //var_dump($s_lon[$i]);
         //var_dump($d_data->rest[$i]->name);
         //var_dump($d_data->rest[$i]->address);
-        //echo "<hr>";
     }
-
 ?>
 
 <html lang="ja">
@@ -78,6 +89,7 @@
                 margin-left: 20px;
             }
         </style>
+        
         <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script>
             var map = null;
@@ -113,8 +125,8 @@
                 var ss_lat = <?php print json_encode($s_lat); ?>;
                 var ss_lon = <?php print json_encode($s_lon); ?>;
                 var ss_url = <?php print json_encode($s_urllist); ?>;
-                var s_count = <?php print $s_show; ?>;
-            
+                var s_count = <?php print $s_count; ?>;
+                                
                 // 選択した駅周辺のお店をMakerにて表示
                 for(var i=0; i < s_count; i++){
                     var sp_name = ss_name[i];
