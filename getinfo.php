@@ -34,8 +34,6 @@
 
     // APIに渡す引数を指定
     $url = sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", $uri, "?format=", $format, "&keyid=", $acckey, "&latitude=", $s_lat,"&longitude=",$s_lon,"&range=",$s_range,"&hit_per_page=",$s_show,"&input_coordinates_mode=",$_input_mode,"&coordinates_mode=",$s_mode);
-    //$url = sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", $uri, "?format=", $format, "&keyid=", $acckey, "&latitude=", $s_lat,"&longitude=",$s_lon,"&range=",$s_range,"&input_coordinates_mode=",$_input_mode,"&coordinates_mode=",$s_mode);
-    //var_dump($url);    
 
     // APIからデータを取得
     $json_data = file_get_contents($url, true);
@@ -121,6 +119,17 @@
                     return;
                 }
                 
+                
+                var dd_data = <?php print json_encode($d_data, true); ?>;
+                console.log(dd_data);
+                //var j_text = JSON.stringify(dd_data);
+
+                for(var s=0; s < dd_data.total_hit_count; s++){
+                    var ss_name = dd_data.rest[s].name;
+                    console.log(ss_name);
+                }
+                
+                
                 var ss_name = <?php print json_encode($s_name); ?>;
                 var ss_lat = <?php print json_encode($s_lat); ?>;
                 var ss_lon = <?php print json_encode($s_lon); ?>;
@@ -180,7 +189,7 @@
                     </td>
                 </tr>
             </table>
-            <div id="myGoogleMap"  style="width:100%; height:90%; border: 1px solid black;">
+            <div id="myGoogleMap" style="width:100%; height:90%; border: 1px solid black;">
             </div>
         </div>
     </body>
